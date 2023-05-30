@@ -4,19 +4,21 @@
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css" />
 	<style>
 		.slideview {
-			width: 300px;
+			width: 400px;
 			height: 150px;
 			max-width: 300px;
 			max-height: 150px;
-			position: relative;
+			position: absolute;
 		}
 
 		.slides {
 			height: 100%;
-			width: fit-content;
+			/* width: fit-content; */
+			margin-left: 10%;
+			width: 80%;
 			display: flex;
-			position: relative;
-			overflow: hidden;
+			position: absolute;
+			display: inline-block;
 		}
 
 		.slide {
@@ -26,7 +28,7 @@
 			margin-left: 0px;
 			margin-bottom: 0px;
 			padding: 0px;
-			width: 300px;
+			width: 100%;
 			height: 100%;
 			display: none;
 		}
@@ -40,7 +42,7 @@
 		.btn {
 			position: absolute;
 			z-index: 99;
-			top: 80px;
+			top: 45%;
 		}
 
 		.btn#prev {
@@ -61,7 +63,7 @@
 		<div class="btn" id="next">
 			<button onclick="next()">next</button>
 		</div>
-		<div class="slides" id="slides">
+		<div class="slides">
 			<div class="slide" id="img0">
 				<img src="img/pic1.jpg">
 			</div>
