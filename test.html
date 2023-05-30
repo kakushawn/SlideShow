@@ -5,14 +5,18 @@
 	<style>
 		.slideview {
 			width: 300px;
-			height: fit-content;
+			height: 150px;
+			max-width: 300px;
+			max-height: 150px;
+			position: relative;
 		}
 
 		.slides {
-			height: 150px;
+			height: 100%;
 			width: fit-content;
 			display: flex;
 			position: relative;
+			overflow: hidden;
 		}
 
 		.slide {
@@ -31,13 +35,31 @@
 			max-height: 100%;
 			height: 100%;
 		}
-	</style>
 
-	<!-- <script src="scripts/test.js" async></script> -->
+		.btn {
+			position: absolute;
+			z-index: 99;
+			top: 80px;
+		}
+
+		.btn#prev {
+			left: 0px;
+		}
+
+		.btn#next {
+			right: 0px;
+		}
+	</style>
 </head>
 
 <body>
 	<div class="slideview">
+		<div class="btn" id="prev">
+			<button onclick="prev()">prev</button>
+		</div>
+		<div class="btn" id="next">
+			<button onclick="next()">next</button>
+		</div>
 		<div class="slides" id="slides">
 			<div class="slide">
 				<img src="img/pic1.jpg" id="img1">
@@ -51,25 +73,20 @@
 		</div>
 	</div>
 
-	<div id="btn">
-		<button onclick="next()">next</button>
-	</div>
-	<div id="btn2">
-		<button onclick="prev()">prev</button>
-	</div>
+
 
 	<script>
 		function prev() {
 			console.log("prev");
 			var val = (parseInt(document.getElementById('slides').style.left, 10) || 0) + 300;
-			if(val>0) val = -600;
+			if (val > 0) val = -600;
 			document.getElementById('slides').style.left = val + 'px';
 		}
 
 		function next() {
 			console.log("next");
 			var val = (parseInt(document.getElementById('slides').style.left, 10) || 0) - 300;
-			if(val<-600) val=0;
+			if (val < -600) val = 0;
 			document.getElementById('slides').style.left = val + 'px';
 		}
 	</script>
