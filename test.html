@@ -28,6 +28,7 @@
 			padding: 0px;
 			width: 300px;
 			height: 100%;
+			display: none;
 		}
 
 		.slide img {
@@ -61,33 +62,39 @@
 			<button onclick="next()">next</button>
 		</div>
 		<div class="slides" id="slides">
-			<div class="slide">
-				<img src="img/pic1.jpg" id="img1">
+			<div class="slide" id="img0">
+				<img src="img/pic1.jpg">
 			</div>
-			<div class="slide">
-				<img src="img/pic2.jpg" id="img2">
+			<div class="slide" id="img1">
+				<img src="img/pic2.jpg">
 			</div>
-			<div class="slide">
-				<img src="img/pic3.jpg" id="img3">
+			<div class="slide" id="img2">
+				<img src="img/pic3.jpg">
 			</div>
 		</div>
 	</div>
 
-
-
 	<script>
+		let prefix = 'img';
+		let img_id = 0;
+		let img_count = 3;
+		document.getElementById('img' + img_id).style.display = 'block';
+
+		function shift(offset) {
+			let next_img_id = (img_id + img_count + offset) % img_count;
+			document.getElementById(prefix + img_id).style.display = 'none';
+			document.getElementById(prefix + next_img_id).style.display = 'block';
+			img_id = next_img_id;
+		}
+
 		function prev() {
 			console.log("prev");
-			var val = (parseInt(document.getElementById('slides').style.left, 10) || 0) + 300;
-			if (val > 0) val = -600;
-			document.getElementById('slides').style.left = val + 'px';
+			shift(-1);
 		}
 
 		function next() {
 			console.log("next");
-			var val = (parseInt(document.getElementById('slides').style.left, 10) || 0) - 300;
-			if (val < -600) val = 0;
-			document.getElementById('slides').style.left = val + 'px';
+			shift(1);
 		}
 	</script>
 </body>
