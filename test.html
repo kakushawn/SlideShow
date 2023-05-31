@@ -1,7 +1,6 @@
 <html>
 
 <head>
-	<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css" />
 	<style>
 		.slideview {
 			position: absolute;
@@ -48,15 +47,44 @@
 
 		.bsection#prev {
 			left: 0px;
-			top: 50%;
-			transform: translate(00%, -50%);
+			bottom: 0px;
 		}
 
 		.bsection#next {
-			position: absolute;
 			right: 0px;
+			bottom: 0px;
+		}
+
+		.bottom {
+			position: absolute;
+			width: 50%;
+			height: 20%;
+			bottom: 0%;
+			left: 50%;
+			transform: translate(-50%);
+			justify-content: center;
+			display: flex;
+		}
+
+		.dots {
+			display: flex;
+			position: absolute;
+			z-index: 99;
 			top: 50%;
-			transform: translate(0%, -50%);
+			transform: translate(0, -50%);
+			padding: 0;
+			margin: 0;
+			list-style: none;
+			justify-content: center;
+		}
+
+		.dot {
+			height: 5px;
+			width: 5px;
+			background-color: #939aa1;
+			border-radius: 50%;
+			display: inline-block;
+			margin: 0 2px;
 		}
 	</style>
 </head>
@@ -80,23 +108,35 @@
 				<img src="img/pic3.jpg">
 			</div>
 		</div>
+		<div class="bottom">
+			<ul class="dots">
+				<span class="dot" id="dot0"></span>
+				<span class="dot" id="dot1"></span>
+				<span class="dot" id="dot2"></span>
+			</ul>
+		</div>
 	</div>
 
 	<script>
 		let prefix = 'img';
+		let prefix_dot = 'dot';
 		let img_id = 0;
 		let img_count = 3;
 		document.getElementById('img0').style.visibility = 'visible';
 		document.getElementById('img0').style.opacity = 1;
 		document.getElementById('img0').style.display = 'block';
+		document.getElementById('dot0').style.backgroundColor = '#606468';
 
 		function shift(offset) {
 			let next_img_id = (img_id + img_count + offset) % img_count;
 			let cur_img = prefix + img_id;
 			let next_img = prefix + next_img_id;
+			let cur_dot = prefix_dot + img_id;
+			let next_dot = prefix_dot + next_img_id;
 			document.getElementById(cur_img).style.visibility = 'hidden';
 			document.getElementById(cur_img).style.opacity = '0';
 			document.getElementById(cur_img).style.transition = 'visibility 0s 0.3s, opacity 0.3s linear';
+			document.getElementById(cur_dot).style.backgroundColor = '#939aa1';
 			setTimeout(function () {
 				document.getElementById(cur_img).style.display = 'none';
 				document.getElementById(next_img).style.display = 'block';
@@ -104,21 +144,25 @@
 				setTimeout(function () {
 					document.getElementById(next_img).style.opacity = '1';
 					document.getElementById(next_img).style.transition = 'opacity 0.3s linear';
+					document.getElementById(next_dot).style.backgroundColor = '#606468';
 				}, 100);
-
 				img_id = next_img_id;
 			}, 300);
 		}
 
 		function prev() {
-			console.log("prev");
+			clearInterval(timeoutHandle);
 			shift(-1);
+			timeoutHandle = setInterval(shift, 3000, 1);
 		}
 
 		function next() {
-			console.log("next");
+			clearInterval(timeoutHandle);
 			shift(1);
+			timeoutHandle = setInterval(shift, 3000, 1);
 		}
+
+		let timeoutHandle = setInterval(shift, 3000, 1);
 	</script>
 </body>
 
