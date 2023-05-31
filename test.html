@@ -4,64 +4,70 @@
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css" />
 	<style>
 		.slideview {
-			width: 400px;
-			height: 150px;
-			max-width: 300px;
-			max-height: 150px;
 			position: absolute;
+			left: 50%;
+			top: 10%;
+			transform: translate(-50%, -10%);
+			width: 400px;
+			height: 200px;
 		}
 
 		.slides {
+			width: 100%;
 			height: 100%;
-			/* width: fit-content; */
-			margin-left: 10%;
-			width: 80%;
 			display: flex;
 			position: absolute;
-			display: inline-block;
 		}
 
 		.slide {
-			border: 0px;
-			margin-top: 0px;
-			margin-right: 0px;
-			margin-left: 0px;
-			margin-bottom: 0px;
-			padding: 0px;
-			width: 100%;
-			height: 100%;
+			opacity: 0;
+			visibility: hidden;
 			display: none;
 		}
 
 		.slide img {
-			max-width: 100%;
-			max-height: 100%;
+			width: 100%;
 			height: 100%;
 		}
 
-		.btn {
+		.bsection {
 			position: absolute;
+			text-align: center;
 			z-index: 99;
-			top: 45%;
+			cursor: pointer;
+			background-color: transparent;
 		}
 
-		.btn#prev {
+		.bbtn {
+			cursor: pointer;
+			border: 1px solid #b6b7b8;
+			background-color: transparent;
+			color: #b6b7b8;
+			font-size: 1.5em;
+		}
+
+		.bsection#prev {
 			left: 0px;
+			top: 50%;
+			transform: translate(00%, -50%);
 		}
 
-		.btn#next {
+		.bsection#next {
+			position: absolute;
 			right: 0px;
+			top: 50%;
+			transform: translate(0%, -50%);
 		}
 	</style>
 </head>
 
 <body>
 	<div class="slideview">
-		<div class="btn" id="prev">
-			<button onclick="prev()">&lt</button>
+		<div class="bsection" id="prev">
+			<button class="bbtn" onclick="prev()">&lt</button>
 		</div>
-		<div class="btn" id="next">
-			<button onclick="next()">&gt</button>
+		<div class="bsection" id="next">
+			<button class="bbtn" onclick="next()">&gt</button>
 		</div>
 		<div class="slides">
 			<div class="slide" id="img0">
@@ -80,13 +86,28 @@
 		let prefix = 'img';
 		let img_id = 0;
 		let img_count = 3;
-		document.getElementById('img' + img_id).style.display = 'block';
+		document.getElementById('img0').style.visibility = 'visible';
+		document.getElementById('img0').style.opacity = 1;
+		document.getElementById('img0').style.display = 'block';
 
 		function shift(offset) {
 			let next_img_id = (img_id + img_count + offset) % img_count;
-			document.getElementById(prefix + img_id).style.display = 'none';
-			document.getElementById(prefix + next_img_id).style.display = 'block';
-			img_id = next_img_id;
+			let cur_img = prefix + img_id;
+			let next_img = prefix + next_img_id;
+			document.getElementById(cur_img).style.visibility = 'hidden';
+			document.getElementById(cur_img).style.opacity = '0';
+			document.getElementById(cur_img).style.transition = 'visibility 0s 0.3s, opacity 0.3s linear';
+			setTimeout(function () {
+				document.getElementById(cur_img).style.display = 'none';
+				document.getElementById(next_img).style.display = 'block';
+				document.getElementById(next_img).style.visibility = 'visible';
+				setTimeout(function () {
+					document.getElementById(next_img).style.opacity = '1';
+					document.getElementById(next_img).style.transition = 'opacity 0.3s linear';
+				}, 100);
+
+				img_id = next_img_id;
+			}, 300);
 		}
 
 		function prev() {
