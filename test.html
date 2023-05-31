@@ -81,7 +81,7 @@
 		.dot {
 			height: 5px;
 			width: 5px;
-			background-color: #939aa1;
+			background-color: #b6b7b8;
 			border-radius: 50%;
 			display: inline-block;
 			margin: 0 2px;
@@ -125,9 +125,9 @@
 		document.getElementById('img0').style.visibility = 'visible';
 		document.getElementById('img0').style.opacity = 1;
 		document.getElementById('img0').style.display = 'block';
-		document.getElementById('dot0').style.backgroundColor = '#606468';
+		document.getElementById('dot0').style.backgroundColor = '#373c41';
 
-		function shift(offset) {
+		function slide_shift(offset) {
 			let next_img_id = (img_id + img_count + offset) % img_count;
 			let cur_img = prefix + img_id;
 			let next_img = prefix + next_img_id;
@@ -136,7 +136,7 @@
 			document.getElementById(cur_img).style.visibility = 'hidden';
 			document.getElementById(cur_img).style.opacity = '0';
 			document.getElementById(cur_img).style.transition = 'visibility 0s 0.3s, opacity 0.3s linear';
-			document.getElementById(cur_dot).style.backgroundColor = '#939aa1';
+			document.getElementById(cur_dot).style.backgroundColor = '#b6b7b8';
 			setTimeout(function () {
 				document.getElementById(cur_img).style.display = 'none';
 				document.getElementById(next_img).style.display = 'block';
@@ -144,7 +144,7 @@
 				setTimeout(function () {
 					document.getElementById(next_img).style.opacity = '1';
 					document.getElementById(next_img).style.transition = 'opacity 0.3s linear';
-					document.getElementById(next_dot).style.backgroundColor = '#606468';
+					document.getElementById(next_dot).style.backgroundColor = '#373c41';
 				}, 100);
 				img_id = next_img_id;
 			}, 300);
@@ -152,17 +152,17 @@
 
 		function prev() {
 			clearInterval(timeoutHandle);
-			shift(-1);
-			timeoutHandle = setInterval(shift, 3000, 1);
+			slide_shift(-1);
+			timeoutHandle = setInterval(slide_shift, 3000, -1);
 		}
 
 		function next() {
 			clearInterval(timeoutHandle);
-			shift(1);
-			timeoutHandle = setInterval(shift, 3000, 1);
+			slide_shift(1);
+			timeoutHandle = setInterval(slide_shift, 3000, 1);
 		}
 
-		let timeoutHandle = setInterval(shift, 3000, 1);
+		let timeoutHandle = setInterval(slide_shift, 3000, 1);
 	</script>
 </body>
 
