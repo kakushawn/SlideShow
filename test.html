@@ -99,12 +99,15 @@
 		</div>
 		<div class="slides">
 			<div class="slide" id="img0">
-				<img src="img/pic1.jpg">
+				<img src="img/pic0.jpg">
 			</div>
 			<div class="slide" id="img1">
-				<img src="img/pic2.jpg">
+				<img src="img/pic1.jpg">
 			</div>
 			<div class="slide" id="img2">
+				<img src="img/pic2.jpg">
+			</div>
+			<div class="slide" id="img3">
 				<img src="img/pic3.jpg">
 			</div>
 		</div>
@@ -113,6 +116,7 @@
 				<span class="dot" id="dot0"></span>
 				<span class="dot" id="dot1"></span>
 				<span class="dot" id="dot2"></span>
+				<span class="dot" id="dot3"></span>
 			</ul>
 		</div>
 	</div>
@@ -121,14 +125,14 @@
 		let prefix = 'img';
 		let prefix_dot = 'dot';
 		let img_id = 0;
-		let img_count = 3;
+		let img_count = 4;
 		document.getElementById('img0').style.visibility = 'visible';
 		document.getElementById('img0').style.opacity = 1;
 		document.getElementById('img0').style.display = 'block';
 		document.getElementById('dot0').style.backgroundColor = '#373c41';
 
 		function slide_shift(offset) {
-			let next_img_id = (img_id + img_count + offset) % img_count;
+			let next_img_id = (img_id + offset + img_count) % img_count;
 			let cur_img = prefix + img_id;
 			let next_img = prefix + next_img_id;
 			let cur_dot = prefix_dot + img_id;
