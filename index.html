@@ -4,24 +4,21 @@
 	<style>
 		.slideview {
 			position: absolute;
-			left: 50%;
-			top: 10%;
-			transform: translate(-50%, -10%);
-			width: 600px;
-			height: 300px;
+			width: 60vw;
+			height: 30vw;
+			margin-left: 20%;
+			margin-right: 20%;
+			top: 20px;
 		}
 
-		.slides {
+		.slidewindow {
 			width: 100%;
 			height: 100%;
-			display: flex;
-			position: absolute;
 		}
 
 		.slide {
-			opacity: 0;
-			visibility: hidden;
-			display: none;
+			width: 100%;
+			height: 100%;
 		}
 
 		.slide img {
@@ -29,15 +26,20 @@
 			height: 100%;
 		}
 
-		.bsection {
-			position: absolute;
-			text-align: center;
-			z-index: 99;
-			cursor: pointer;
-			background-color: transparent;
+		.slide-active {
+			opacity: 1;
+			display: block;
 		}
 
-		.bbtn {
+		.slide-inactive {
+			opacity: 0;
+			display: none;
+		}
+
+		.slide-botton {
+			position: absolute;
+			z-index: 99;
+			background-color: transparent;
 			cursor: pointer;
 			border: 1px solid #b6b7b8;
 			background-color: transparent;
@@ -45,79 +47,70 @@
 			font-size: 1.5em;
 		}
 
-		.bsection#prev {
+		.slide-botton#prev {
 			left: 0px;
 			bottom: 0px;
 		}
 
-		.bsection#next {
+		.slide-botton#next {
 			right: 0px;
 			bottom: 0px;
 		}
 
-		.bottom {
+		.bullets {
 			position: absolute;
 			width: 50%;
-			height: 10%;
-			bottom: 0%;
-			left: 50%;
-			transform: translate(-50%);
-			justify-content: center;
-			display: flex;
-		}
-
-		.dots {
-			display: flex;
-			position: absolute;
+			height: 5%;
+			margin-left: 25%;
+			margin-right: 25%;
+			bottom: 0px;
 			z-index: 99;
-			top: 50%;
-			transform: translate(0, -50%);
-			padding: 0;
-			margin: 0;
-			list-style: none;
+			display: flex;
 			justify-content: center;
 		}
 
-		.dot {
+		.bullet {
 			height: 5px;
 			width: 5px;
-			background-color: #b6b7b8;
 			border-radius: 50%;
 			display: inline-block;
 			margin: 0 2px;
+		}
+
+		.bullet-active {
+			background-color: #373c41;
+		}
+
+		.bullet-inactive {
+			background-color: #b6b7b8;
 		}
 	</style>
 </head>
 
 <body>
 	<div class="slideview">
-		<div class="bsection" id="prev">
-			<button class="bbtn" onclick="prev()">&lt</button>
-		</div>
-		<div class="bsection" id="next">
-			<button class="bbtn" onclick="next()">&gt</button>
-		</div>
-		<div class="slides">
+		<div class="slidewindow">
 			<div class="slide" id="img0">
 				<img src="img/pic0.jpg">
 			</div>
-			<div class="slide" id="img1">
+			<div class="slide slide-inactive" id="img1">
 				<img src="img/pic1.jpg">
 			</div>
-			<div class="slide" id="img2">
+			<div class="slide slide-inactive" id="img2">
 				<img src="img/pic2.jpg">
 			</div>
-			<div class="slide" id="img3">
+			<div class="slide slide-inactive" id="img3">
 				<img src="img/pic3.jpg">
 			</div>
 		</div>
-		<div class="bottom">
-			<ul class="dots">
-				<span class="dot" id="dot0"></span>
-				<span class="dot" id="dot1"></span>
-				<span class="dot" id="dot2"></span>
-				<span class="dot" id="dot3"></span>
-			</ul>
+		<button class="slide-botton" id="prev" onclick="Prev()">&lt</button>
+		<button class="slide-botton" id="next" onclick="Next()">&gt</button>
+
+		<div class="bullets">
+			<span class="bullet bullet-inactive" id="dot0"></span>
+			<span class="bullet bullet-inactive" id="dot1"></span>
+			<span class="bullet bullet-inactive" id="dot2"></span>
+			<span class="bullet bullet-inactive" id="dot3"></span>
 		</div>
 	</div>
 
@@ -125,48 +118,54 @@
 		let prefix = 'img';
 		let prefix_dot = 'dot';
 		let img_id = 0;
-		let img_count = 4;
-		document.getElementById('img0').style.visibility = 'visible';
-		document.getElementById('img0').style.opacity = 1;
-		document.getElementById('img0').style.display = 'block';
-		document.getElementById('dot0').style.backgroundColor = '#373c41';
+		const img_count = 4;
+		let firstSlide = document.getElementById('img0');
+		firstSlide.classList.remove('slide-inactive');
+		firstSlide.classList.add('slide-active');
+		let firstBullet = document.getElementById('dot0');
+		firstBullet.classList.remove('bullet-inactive');
+		firstBullet.classList.add('bullet-active');
+		let shifting = false;
 
-		function slide_shift(offset) {
+		// ES6: arrow function ()=>
+		// promise
+		function SlideShift(offset) {
+			if (shifting) return;
+			shifting = true;
 			let next_img_id = (img_id + offset + img_count) % img_count;
 			let cur_img = prefix + img_id;
 			let next_img = prefix + next_img_id;
 			let cur_dot = prefix_dot + img_id;
 			let next_dot = prefix_dot + next_img_id;
-			document.getElementById(cur_img).style.visibility = 'hidden';
 			document.getElementById(cur_img).style.opacity = '0';
-			document.getElementById(cur_img).style.transition = 'visibility 0s 0.3s, opacity 0.3s linear';
+			document.getElementById(cur_img).style.transition = 'opacity 0.3s linear';
 			document.getElementById(cur_dot).style.backgroundColor = '#b6b7b8';
 			setTimeout(function () {
 				document.getElementById(cur_img).style.display = 'none';
 				document.getElementById(next_img).style.display = 'block';
-				document.getElementById(next_img).style.visibility = 'visible';
 				setTimeout(function () {
 					document.getElementById(next_img).style.opacity = '1';
 					document.getElementById(next_img).style.transition = 'opacity 0.3s linear';
 					document.getElementById(next_dot).style.backgroundColor = '#373c41';
+					shifting = false;
 				}, 100);
 				img_id = next_img_id;
 			}, 300);
 		}
 
-		function prev() {
+		function Prev() {
 			clearInterval(timeoutHandle);
-			slide_shift(-1);
-			timeoutHandle = setInterval(slide_shift, 3000, -1);
+			SlideShift(-1);
+			timeoutHandle = setInterval(SlideShift, 3000, -1);
 		}
 
-		function next() {
+		function Next() {
 			clearInterval(timeoutHandle);
-			slide_shift(1);
-			timeoutHandle = setInterval(slide_shift, 3000, 1);
+			SlideShift(1);
+			timeoutHandle = setInterval(SlideShift, 3000, 1);
 		}
 
-		let timeoutHandle = setInterval(slide_shift, 3000, 1);
+		let timeoutHandle = setInterval(SlideShift, 3000, 1);
 	</script>
 </body>
 
