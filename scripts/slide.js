@@ -1,0 +1,115 @@
+
+class Slide {
+	// id;
+	// cls;
+	// items;
+
+	// slideView;
+	// slideWindow;
+	// buttons;
+	// bulletWindow
+
+	// slides;
+	// bullets;
+	// numItem;
+	// currentInd;
+	// intervalHandle;
+
+	constructor(param) {
+		this.id = param.id;
+		this.cls = param.cls;
+		this.items = param.items;
+		this.numItem = this.items.length;
+		this.currentInd = 0;
+		this.switching = false;
+	}
+
+	Init() {
+		// initialize slideview
+		this.slideView = document.createElement("div");
+		this.slideView.classList.add("slideview");
+
+		// initialize button
+		const buttonLabels = [
+			['<', "prev", -1],
+			['>', "next", 1]
+		];
+		this.buttons = buttonLabels.forEach(options => {
+			let btn = document.createElement("button");
+			btn.classList.add("slide-controll");
+			btn.setAttribute("id", options[1]);
+			btn.addEventListener('click', this.ShiftSlide.bind(this, options[2]));
+			btn.textContent = options[0];
+			this.slideView.append(btn);
+			return btn;
+		});
+
+		// initialize bullets
+		this.bullets = [];
+		this.bulletWindow = document.createElement("div");
+		this.bulletWindow.classList.add("bullets");
+		for (let i = 0; i < this.numItem; ++i) {
+			let bullet = document.createElement("span");
+			let cls = i > 0 ? "bullet-inactive" : "bullet-active";
+			bullet.classList.add("bullet", cls);
+			bullet.addEventListener('click', this.ToSlide.bind(this, i));
+			this.bulletWindow.append(bullet);
+			this.bullets.push(bullet);
+		}
+		this.bullets[0].classList.remove("bullet-inactive");
+		this.bullets[0].classList.add("bullet-active");
+		this.slideView.append(this.bulletWindow);
+
+		// initialize sildes
+		this.slideWindow = document.createElement("div");
+		this.slideWindow.classList.add("slideWindow");
+		this.slides = [];
+		for (let i = 0; i < this.numItem; ++i) {
+			let slide = document.createElement("div");
+			let cls = i > 0 ? "slide-inactive" : "slide-active";
+			slide.classList.add("slide", cls);
+			let img = document.createElement("img");
+			img.setAttribute("src", this.items[i]);
+			slide.append(img);
+			this.slides.push(slide);
+			this.slideWindow.append(slide);
+		}
+		this.slideView.append(this.slideWindow);
+
+		document.body.insertBefore(this.slideView, document.body.firstChild);
+	}
+
+	SlideOut(slideInd) {
+		this.slides[slideInd].classList.remove('slide-active');
+		this.bullets[slideInd].classList.remove('bullet-active');
+		this.slides[slideInd].classList.add('slide-inactive');
+		this.bullets[slideInd].classList.add('bullet-inactive');
+	}
+
+	SlideIn(slideInd) {
+		this.slides[slideInd].classList.remove('slide-inactive');
+		this.bullets[slideInd].classList.remove('bullet-inactive');
+		this.slides[slideInd].classList.add('slide-active');
+		this.bullets[slideInd].classList.add('bullet-active');
+	}
+
+	ToSlide(slideInd) {
+		let t = this;
+		this.SlideOut(t.currentInd);
+		setTimeout(function () {
+			t.SlideIn(slideInd);
+		}, 500);
+		this.currentInd = slideInd;
+	}
+
+	ShiftSlide(offset) {
+		clearInterval(this.intervalHandle);
+		let nextInd = (this.currentInd + offset + this.numItem) % this.numItem;
+		this.ToSlide(nextInd);
+		this.intervalHandle = setInterval(this.ShiftSlide.bind(this, 1), 3000);
+	}
+
+	Start() {
+		this.intervalHandle = setInterval(this.ShiftSlide.bind(this, 1), 3000);
+	}
+}
