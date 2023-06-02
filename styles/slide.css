@@ -1,5 +1,6 @@
 .slideview {
 	position: absolute;
+	display: inline-block;
 	width: 60vw;
 	height: 30vw;
 	margin-left: 20%;
@@ -30,24 +31,25 @@
 	opacity: 1;
 }
 
-.slide-controll {
+.controll {
 	position: absolute;
+	height: 100%;
+	width: 7.5%;
+	top: 0px;
 	z-index: 99;
 	background-color: transparent;
 	cursor: pointer;
 	border: 0px;
 	color: #b6b7b8;
 	font-size: 1.5em;
-	height: 100%;
-	width: 7.5%;
 	padding: 0px;
 }
 
-.slide-controll#prev {
+.controll#prev {
 	left: 0px;
 }
 
-.slide-controll#next {
+.controll#next {
 	right: 0px;
 }
 
