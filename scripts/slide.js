@@ -11,7 +11,7 @@ class Slide {
 
 	Init() {
 		// initialize slideview
-		this.slideView = document.getElementById("slideview");
+		this.slideView = document.querySelector(".slideview");
 
 		// initialize button
 		this.slideView.querySelector(".controll#prev").addEventListener(
