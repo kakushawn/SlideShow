@@ -1,171 +1,28 @@
 <html>
 
 <head>
-	<style>
-		.slideview {
-			position: absolute;
-			width: 60vw;
-			height: 30vw;
-			margin-left: 20%;
-			margin-right: 20%;
-			top: 20px;
-		}
-
-		.slidewindow {
-			width: 100%;
-			height: 100%;
-		}
-
-		.slide {
-			width: 100%;
-			height: 100%;
-		}
-
-		.slide img {
-			width: 100%;
-			height: 100%;
-		}
-
-		.slide-active {
-			opacity: 1;
-			display: block;
-		}
-
-		.slide-inactive {
-			opacity: 0;
-			display: none;
-		}
-
-		.slide-botton {
-			position: absolute;
-			z-index: 99;
-			background-color: transparent;
-			cursor: pointer;
-			border: 1px solid #b6b7b8;
-			background-color: transparent;
-			color: #b6b7b8;
-			font-size: 1.5em;
-		}
-
-		.slide-botton#prev {
-			left: 0px;
-			bottom: 0px;
-		}
-
-		.slide-botton#next {
-			right: 0px;
-			bottom: 0px;
-		}
-
-		.bullets {
-			position: absolute;
-			width: 50%;
-			height: 5%;
-			margin-left: 25%;
-			margin-right: 25%;
-			bottom: 0px;
-			z-index: 99;
-			display: flex;
-			justify-content: center;
-		}
-
-		.bullet {
-			height: 5px;
-			width: 5px;
-			border-radius: 50%;
-			display: inline-block;
-			margin: 0 2px;
-		}
-
-		.bullet-active {
-			background-color: #373c41;
-		}
-
-		.bullet-inactive {
-			background-color: #b6b7b8;
-		}
-	</style>
+	<link href="styles/slide.css" rel="stylesheet" />
 </head>
 
 <body>
-	<div class="slideview">
-		<button class="slide-botton" id="prev" onclick="Prev()">&lt</button>
-		<button class="slide-botton" id="next" onclick="Next()">&gt</button>
-		<div class="slidewindow">
-			<div class="slide" id="img0">
-				<img src="img/pic0.jpg">
-			</div>
-			<div class="slide slide-inactive" id="img1">
-				<img src="img/pic1.jpg">
-			</div>
-			<div class="slide slide-inactive" id="img2">
-				<img src="img/pic2.jpg">
-			</div>
-			<div class="slide slide-inactive" id="img3">
-				<img src="img/pic3.jpg">
-			</div>
+	<html>
+		<div class="slideview" id="slideview">
+			<div class="slidewindow"></div>
+			<div class="bullets"></div>
+			<button class="controll" id="prev">&lt</button>
+			<button class="controll" id="next">&gt</button>
 		</div>
+	</html>
 
-		<div class="bullets">
-			<span class="bullet bullet-inactive" id="dot0"></span>
-			<span class="bullet bullet-inactive" id="dot1"></span>
-			<span class="bullet bullet-inactive" id="dot2"></span>
-			<span class="bullet bullet-inactive" id="dot3"></span>
-		</div>
-	</div>
-
+	<script type="text/javascript" src="scripts/slide.js"></script>
 	<script>
-		let prefix = 'img';
-		let prefix_dot = 'dot';
-		let img_id = 0;
-		const img_count = 4;
-		let firstSlide = document.getElementById('img0');
-		firstSlide.classList.remove('slide-inactive');
-		firstSlide.classList.add('slide-active');
-		let firstBullet = document.getElementById('dot0');
-		firstBullet.classList.remove('bullet-inactive');
-		firstBullet.classList.add('bullet-active');
-		let shifting = false;
-
-		// ES6: arrow function ()=>
-		// promise
-		function SlideShift(offset) {
-			if (shifting) return;
-			shifting = true;
-			let next_img_id = (img_id + offset + img_count) % img_count;
-			let cur_img = prefix + img_id;
-			let next_img = prefix + next_img_id;
-			let cur_dot = prefix_dot + img_id;
-			let next_dot = prefix_dot + next_img_id;
-			document.getElementById(cur_img).style.opacity = '0';
-			document.getElementById(cur_img).style.transition = 'opacity 0.3s linear';
-			document.getElementById(cur_dot).style.backgroundColor = '#b6b7b8';
-			setTimeout(function () {
-				document.getElementById(cur_img).style.display = 'none';
-				document.getElementById(next_img).style.display = 'block';
-				setTimeout(function () {
-					document.getElementById(next_img).style.opacity = '1';
-					document.getElementById(next_img).style.transition = 'opacity 0.3s linear';
-					document.getElementById(next_dot).style.backgroundColor = '#373c41';
-					shifting = false;
-				}, 100);
-				img_id = next_img_id;
-			}, 300);
-		}
-
-		function Prev() {
-			clearInterval(timeoutHandle);
-			SlideShift(-1);
-			timeoutHandle = setInterval(SlideShift, 3000, -1);
-		}
-
-		function Next() {
-			clearInterval(timeoutHandle);
-			SlideShift(1);
-			timeoutHandle = setInterval(SlideShift, 3000, 1);
-		}
-
-		let timeoutHandle = setInterval(SlideShift, 3000, 1);
+		s = new Slide({
+			id: "slide",
+			cls: "my-theme",
+			items: ["img/pic0.jpg", "img/pic1.jpg", "img/pic2.jpg", "img/pic3.jpg"]
+		});
+		s.Init();
+		window.addEventListener('load', ()=>{s.SlideShow(1);});
 	</script>
 </body>
 
