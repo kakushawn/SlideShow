@@ -15,7 +15,7 @@ class Slide {
 
 		// initialize button
 		this.slideView.querySelector(".slide-controll#prev").addEventListener(
-			"click", () => { this.ShiftSlide(-1); this.SlideShow(1);}
+			"click", () => { this.ShiftSlide(-1); this.SlideShow(-1);}
 		);
 		this.slideView.querySelector(".slide-controll#next").addEventListener(
 			"click", () => { this.ShiftSlide(1); this.SlideShow(1);}
