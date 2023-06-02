@@ -1,3 +1,15 @@
+'use strict';
+
+class TextButton {
+	constructor(param) {
+		this.element = document.createElement("button");
+		this.element.classList.add(param.cls);
+		this.element.textContent = param.label;
+		this.element.addEventListener(param.eventHandler["event"], param.eventHandler["handler"])
+		this.element.setAttribute("id", param.id);
+	}
+}
+
 class Slide {
 	constructor(param) {
 		this.id = param.id;
@@ -7,29 +19,55 @@ class Slide {
 		this.numItem = this.items.length;
 		this.currentInd = 0;
 		this.switching = false;
+		this.forward = true;
 	}
 
 	Init() {
 		// initialize slideview
-		this.slideView = document.querySelector(".slideview");
+		this.slideView = document.createElement("div");
+		this.slideView.classList.add(this.cls);
+		this.slideView.id = this.id;
 
 		// initialize button
-		this.slideView.querySelector(".controll#prev").addEventListener(
-			"click", () => { this.ShiftSlide(-1); this.SlideShow(-1);}
-		);
-		this.slideView.querySelector(".controll#next").addEventListener(
-			"click", () => { this.ShiftSlide(1); this.SlideShow(1);}
-		);
+		this.slideView.append(new TextButton({
+			id: "prev",
+			cls: "controll",
+			label: "<",
+			eventHandler: {
+				"event": "click",
+				"handler": () => {
+					this.ShiftOne(false);
+					this.ResetSlideRotator();
+				}
+			}
+		}).element);
+		this.slideView.append(new TextButton({
+			id: "next",
+			cls: "controll",
+			label: ">",
+			eventHandler: {
+				"event": "click",
+				"handler": () => {
+					this.ShiftOne(true);
+					this.ResetSlideRotator();
+				}
+			}
+		}).element);
 
 		// initialize bullets & sildes
 		this.bullets = [];
 		this.slides = [];
-		let bulletWindow = this.slideView.querySelector(".bullets");
-		let slideWindow = this.slideView.querySelector(".slideWindow");
+		let bulletWindow = document.createElement("div");
+		bulletWindow.classList.add("bullets");
+		let slideWindow = document.createElement("div");
+		slideWindow.classList.add("slide-window");
 		for (let i = 0; i < this.numItem; ++i) {
 			let bullet = document.createElement("span");
 			bullet.classList.add("bullet");
-			bullet.addEventListener('click', () => { this.ToSlide(i); this.SlideShow();});
+			bullet.addEventListener('click', () => {
+				this.ToSlide(i);
+				this.ResetSlideRotator();
+			});
 			bulletWindow.append(bullet);
 			this.bullets.push(bullet);
 
@@ -41,37 +79,41 @@ class Slide {
 			this.slides.push(slide);
 			slideWindow.append(slide);
 		}
+		this.slideView.append(bulletWindow);
+		this.slideView.append(slideWindow);
 
-		this.bullets[0].classList.add("bullet-active");
-		this.slides[0].classList.add("slide-active");
+		this.bullets[0].classList.add("active");
+		this.slides[0].classList.add("active");
 		this.shifting = false;
+		document.body.insertBefore(this.slideView, document.body.firstChild);
 	}
 
 	ToSlide(slideInd) {
-		if (this.shifting == true) return;
+		if (this.shifting === true) return;
 		this.shifting = true;
 
-		this.slides[this.currentInd].classList.remove('slide-active');
-		this.bullets[this.currentInd].classList.remove('bullet-active');
+		this.slides[this.currentInd].classList.remove('active');
+		this.bullets[this.currentInd].classList.remove('active');
 		setTimeout(() => {
-			this.slides[slideInd].classList.add('slide-active');
-			this.bullets[slideInd].classList.add('bullet-active');
-		}, 500);
+			this.slides[slideInd].classList.add('active');
+			this.bullets[slideInd].classList.add('active');
 
-		setTimeout(() => {
-			this.currentInd = slideInd;
-			this.shifting = false;
+			setTimeout(() => {
+				this.currentInd = slideInd;
+				this.shifting = false;
+			}, 500);
 		}, 500);
 	}
 
-	ShiftSlide(offset) {
-		offset = (offset<0) ?-1 :1;
-		let nextInd = (this.currentInd + offset + this.numItem) % this.numItem;
+	ShiftOne(is_forward) {
+		this.forward = is_forward;
+		const offset = (is_forward === true) ? 1 : -1;
+		const nextInd = (this.currentInd + offset + this.numItem) % this.numItem;
 		this.ToSlide(nextInd);
 	}
 
-	SlideShow(direction) {
+	ResetSlideRotator() {
 		clearInterval(this.intervalHandle);
-		this.intervalHandle = setInterval(this.ShiftSlide.bind(this, direction), 3000);
+		this.intervalHandle = setInterval(this.ShiftOne.bind(this, this.forward), 3000);
 	}
 }
