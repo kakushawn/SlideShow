@@ -1,21 +1,4 @@
-
-
 class Slide {
-	// id;
-	// cls;
-	// items;
-
-	// slideView;
-	// slideWindow;
-	// buttons;
-	// bulletWindow
-
-	// slides;
-	// bullets;
-	// numItem;
-	// currentInd;
-	// intervalHandle;
-
 	constructor(param) {
 		this.id = param.id;
 		this.cls = param.cls;
@@ -28,85 +11,51 @@ class Slide {
 
 	Init() {
 		// initialize slideview
-		this.slideView = document.createElement("div");
-		this.slideView.classList.add("slideview");
+		this.slideView = document.getElementById("slideview");
 
 		// initialize button
-		const buttonLabels = [
-			['<', "prev", -1],
-			['>', "next", 1]
-		];
-		this.buttons = buttonLabels.forEach(options => {
-			let btn = document.createElement("button");
-			btn.classList.add("slide-controll");
-			btn.setAttribute("id", options[1]);
-			btn.addEventListener('click', ()=>{
-				clearInterval(this.intervalHandle);
-				this.ShiftSlide(options[2]);
-				this.Start();
-			});
-			btn.textContent = options[0];
-			this.slideView.append(btn);
-			return btn;
-		});
+		this.slideView.querySelector(".slide-controll#prev").addEventListener(
+			"click", () => { this.ShiftSlide(-1); this.SlideShow(1);}
+		);
+		this.slideView.querySelector(".slide-controll#next").addEventListener(
+			"click", () => { this.ShiftSlide(1); this.SlideShow(1);}
+		);
 
-		// initialize bullets
+		// initialize bullets & sildes
 		this.bullets = [];
-		this.bulletWindow = document.createElement("div");
-		this.bulletWindow.classList.add("bullets");
+		this.slides = [];
+		let bulletWindow = this.slideView.querySelector(".bullets");
+		let slideWindow = this.slideView.querySelector(".slideWindow");
 		for (let i = 0; i < this.numItem; ++i) {
 			let bullet = document.createElement("span");
-			let cls = i > 0 ? "bullet-inactive" : "bullet-active";
-			bullet.classList.add("bullet", cls);
-			bullet.addEventListener('click', this.ToSlide.bind(this, i));
-			this.bulletWindow.append(bullet);
+			bullet.classList.add("bullet");
+			bullet.addEventListener('click', () => { this.ToSlide(i); this.SlideShow();});
+			bulletWindow.append(bullet);
 			this.bullets.push(bullet);
-		}
-		this.bullets[0].classList.remove("bullet-inactive");
-		this.bullets[0].classList.add("bullet-active");
-		this.slideView.append(this.bulletWindow);
 
-		// initialize sildes
-		this.slideWindow = document.createElement("div");
-		this.slideWindow.classList.add("slideWindow");
-		this.slides = [];
-		for (let i = 0; i < this.numItem; ++i) {
 			let slide = document.createElement("div");
-			let cls = i > 0 ? "slide-inactive" : "slide-active";
-			slide.classList.add("slide", cls);
+			slide.classList.add("slide");
 			let img = document.createElement("img");
-			img.setAttribute("src", this.items[i]);
+			img.src = this.items[i];
 			slide.append(img);
 			this.slides.push(slide);
-			this.slideWindow.append(slide);
+			slideWindow.append(slide);
 		}
-		this.slideView.append(this.slideWindow);
 
-		document.body.insertBefore(this.slideView, document.body.firstChild);
+		this.bullets[0].classList.add("bullet-active");
+		this.slides[0].classList.add("slide-active");
 		this.shifting = false;
-	}
-
-	SlideOut(slideInd) {
-		this.slides[slideInd].classList.remove('slide-active');
-		this.bullets[slideInd].classList.remove('bullet-active');
-		this.slides[slideInd].classList.add('slide-inactive');
-		this.bullets[slideInd].classList.add('bullet-inactive');
-	}
-
-	SlideIn(slideInd) {
-		this.slides[slideInd].classList.remove('slide-inactive');
-		this.bullets[slideInd].classList.remove('bullet-inactive');
-		this.slides[slideInd].classList.add('slide-active');
-		this.bullets[slideInd].classList.add('bullet-active');
 	}
 
 	ToSlide(slideInd) {
 		if (this.shifting == true) return;
 		this.shifting = true;
 
-		this.SlideOut(this.currentInd);
+		this.slides[this.currentInd].classList.remove('slide-active');
+		this.bullets[this.currentInd].classList.remove('bullet-active');
 		setTimeout(() => {
-			this.SlideIn(slideInd);
+			this.slides[slideInd].classList.add('slide-active');
+			this.bullets[slideInd].classList.add('bullet-active');
 		}, 500);
 
 		setTimeout(() => {
@@ -116,11 +65,13 @@ class Slide {
 	}
 
 	ShiftSlide(offset) {
+		offset = (offset<0) ?-1 :1;
 		let nextInd = (this.currentInd + offset + this.numItem) % this.numItem;
 		this.ToSlide(nextInd);
 	}
 
-	Start() {
-		this.intervalHandle = setInterval(this.ShiftSlide.bind(this, 1), 3000);
+	SlideShow(direction) {
+		clearInterval(this.intervalHandle);
+		this.intervalHandle = setInterval(this.ShiftSlide.bind(this, direction), 3000);
 	}
 }

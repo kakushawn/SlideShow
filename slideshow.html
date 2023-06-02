@@ -5,6 +5,15 @@
 </head>
 
 <body>
+	<html>
+		<div class="slideview" id="slideview">
+			<button class="slide-controll" id="prev">&lt</button>
+			<button class="slide-controll" id="next">&gt</button>
+			<div class="bullets"></div>
+			<div class="slidewindow"></div>
+		</div>
+	</html>
+
 	<script type="text/javascript" src="scripts/slide.js"></script>
 	<script>
 		s = new Slide({
@@ -13,6 +22,7 @@
 			items: ["img/pic0.jpg", "img/pic1.jpg", "img/pic2.jpg", "img/pic3.jpg"]
 		});
 		s.Init();
+		window.addEventListener('load', ()=>{s.SlideShow(1);});
 	</script>
 </body>
 
