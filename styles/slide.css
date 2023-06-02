@@ -74,6 +74,7 @@
 	border-radius: 50%;
 	display: inline-block;
 	margin: 0 5px;
+	transition: background-color 0.5s linear;
 }
 
 .bullet-active {

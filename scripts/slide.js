@@ -40,7 +40,11 @@ class Slide {
 			let btn = document.createElement("button");
 			btn.classList.add("slide-controll");
 			btn.setAttribute("id", options[1]);
-			btn.addEventListener('click', this.ShiftSlide.bind(this, options[2]));
+			btn.addEventListener('click', ()=>{
+				clearInterval(this.intervalHandle);
+				this.ShiftSlide(options[2]);
+				this.Start();
+			});
 			btn.textContent = options[0];
 			this.slideView.append(btn);
 			return btn;
@@ -106,16 +110,14 @@ class Slide {
 		}, 500);
 
 		setTimeout(() => {
-			this.shifting = false;
 			this.currentInd = slideInd;
+			this.shifting = false;
 		}, 500);
 	}
 
 	ShiftSlide(offset) {
-		clearInterval(this.intervalHandle);
 		let nextInd = (this.currentInd + offset + this.numItem) % this.numItem;
 		this.ToSlide(nextInd);
-		this.intervalHandle = setInterval(this.ShiftSlide.bind(this, 1), 3000);
 	}
 
 	Start() {
