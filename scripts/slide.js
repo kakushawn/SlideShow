@@ -1,4 +1,5 @@
 
+
 class Slide {
 	// id;
 	// cls;
@@ -19,6 +20,7 @@ class Slide {
 		this.id = param.id;
 		this.cls = param.cls;
 		this.items = param.items;
+
 		this.numItem = this.items.length;
 		this.currentInd = 0;
 		this.switching = false;
@@ -77,6 +79,7 @@ class Slide {
 		this.slideView.append(this.slideWindow);
 
 		document.body.insertBefore(this.slideView, document.body.firstChild);
+		this.shifting = false;
 	}
 
 	SlideOut(slideInd) {
@@ -94,12 +97,18 @@ class Slide {
 	}
 
 	ToSlide(slideInd) {
-		let t = this;
-		this.SlideOut(t.currentInd);
-		setTimeout(function () {
-			t.SlideIn(slideInd);
+		if (this.shifting == true) return;
+		this.shifting = true;
+
+		this.SlideOut(this.currentInd);
+		setTimeout(() => {
+			this.SlideIn(slideInd);
 		}, 500);
-		this.currentInd = slideInd;
+
+		setTimeout(() => {
+			this.shifting = false;
+			this.currentInd = slideInd;
+		}, 500);
 	}
 
 	ShiftSlide(offset) {
